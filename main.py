@@ -180,3 +180,17 @@ def delete_country_code(
     db.delete(db_country_code)
     db.commit()
     return {"message": "Country code deleted successfully"}
+
+
+@app.post("/signup")
+def signup(user: UserCreate, db: Session = Depends(get_db)):
+    hashed_password = get_password_hash(user.password)
+    new_user = User(
+        email=user.email,
+        full_name=user.full_name,
+        hashed_password=hashed_password,
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
