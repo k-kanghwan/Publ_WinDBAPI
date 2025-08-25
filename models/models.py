@@ -21,7 +21,7 @@ class EtcCageCode(Base):
     country: Mapped[Optional[str]] = mapped_column(Text, comment='국가')
     cage_status_code: Mapped[Optional[str]] = mapped_column(String(2), comment='CAGE상태부호')
     company_name: Mapped[Optional[str]] = mapped_column(String(400), comment='회사명')
-    addr_kn: Mapped[Optional[str]] = mapped_column(String(400), comment='주소 한글')
+    addr_ko: Mapped[Optional[str]] = mapped_column(String(400), comment='주소 한글')
     addr_en: Mapped[Optional[str]] = mapped_column(String(400), comment='주소 영문')
     assignment_dt: Mapped[Optional[str]] = mapped_column(String(20), comment='부여일')
     created_dt: Mapped[Optional[str]] = mapped_column(String(20), comment='생성일')
@@ -46,7 +46,7 @@ class EtcCageCodeKr(Base):
     country: Mapped[Optional[str]] = mapped_column(Enum('한국'), comment='국가')
     cage_status_code: Mapped[Optional[str]] = mapped_column(String(2), comment='CAGE상태부호')
     company_name: Mapped[Optional[str]] = mapped_column(String(400), comment='회사명')
-    addr_kn: Mapped[Optional[str]] = mapped_column(String(400), comment='주소 한글')
+    addr_ko: Mapped[Optional[str]] = mapped_column(String(400), comment='주소 한글')
     addr_en: Mapped[Optional[str]] = mapped_column(String(400), comment='주소 영문')
     assignment_dt: Mapped[Optional[str]] = mapped_column(String(20), comment='부여일')
     created_dt: Mapped[Optional[str]] = mapped_column(String(20), comment='생성일')
@@ -77,7 +77,7 @@ class EtcCountryCode(Base):
 
     country_code_2char: Mapped[str] = mapped_column(VARCHAR(2), primary_key=True, comment='국가부호_2자리')
     country_code_3char: Mapped[str] = mapped_column(VARCHAR(3), primary_key=True, comment='국가부호_3자리')
-    country_name_kr: Mapped[str] = mapped_column(VARCHAR(100), comment='국가명_한글')
+    country_name_ko: Mapped[str] = mapped_column(VARCHAR(100), comment='국가명_한글')
     country_name_en: Mapped[str] = mapped_column(VARCHAR(100), comment='국가명_영문')
     country_code_numeric: Mapped[Optional[int]] = mapped_column(Integer, comment='국가코드_숫자')
 
@@ -88,13 +88,13 @@ class IncFscFscInfo(Base):
 
     fsc: Mapped[str] = mapped_column(VARCHAR(4), primary_key=True, comment='군급부호')
     fsc_status: Mapped[str] = mapped_column(VARCHAR(4), comment='군급부호 상태')
-    fsc_name_kn: Mapped[Optional[str]] = mapped_column(VARCHAR(255), comment='명칭_한글')
+    fsc_name_ko: Mapped[Optional[str]] = mapped_column(VARCHAR(255), comment='명칭_한글')
     fsc_name_en: Mapped[Optional[str]] = mapped_column(VARCHAR(255), comment='명칭_영문')
-    note_kn: Mapped[Optional[str]] = mapped_column(TEXT, comment='주석_한글')
+    note_ko: Mapped[Optional[str]] = mapped_column(TEXT, comment='주석_한글')
     note_en: Mapped[Optional[str]] = mapped_column(TEXT, comment='주석_영문')
-    included_kn: Mapped[Optional[str]] = mapped_column(TEXT, comment='포함_한글')
+    included_ko: Mapped[Optional[str]] = mapped_column(TEXT, comment='포함_한글')
     included_en: Mapped[Optional[str]] = mapped_column(TEXT, comment='포함_영문')
-    excluded_kn: Mapped[Optional[str]] = mapped_column(TEXT, comment='제외_한글')
+    excluded_ko: Mapped[Optional[str]] = mapped_column(TEXT, comment='제외_한글')
     excluded_en: Mapped[Optional[str]] = mapped_column(TEXT, comment='제외_영문')
 
     inc_fsc__relationship: Mapped[List['IncFscRelationship']] = relationship('IncFscRelationship', back_populates='inc_fsc__fsc_info')
@@ -106,9 +106,9 @@ class IncFscIncInfo(Base):
 
     inc: Mapped[str] = mapped_column(VARCHAR(5), primary_key=True, comment='품명부호')
     niin: Mapped[Optional[str]] = mapped_column(VARCHAR(6), comment='품목식별지침부호(NIIN)')
-    inc_name_kn: Mapped[Optional[str]] = mapped_column(VARCHAR(255), comment='품명_한글')
+    inc_name_ko: Mapped[Optional[str]] = mapped_column(VARCHAR(255), comment='품명_한글')
     inc_name_en: Mapped[Optional[str]] = mapped_column(VARCHAR(255), comment='품명_영문')
-    description_kn: Mapped[Optional[str]] = mapped_column(TEXT, comment='품명정의_한글')
+    description_ko: Mapped[Optional[str]] = mapped_column(TEXT, comment='품명정의_한글')
     description_en: Mapped[Optional[str]] = mapped_column(TEXT, comment='품명정의_영문')
 
     inc_fsc__relationship: Mapped[List['IncFscRelationship']] = relationship('IncFscRelationship', back_populates='inc_fsc__inc_info')
@@ -196,7 +196,7 @@ class StdKsNamingPattern(Base):
     std_name: Mapped[Optional[str]] = mapped_column(TEXT, comment='표준명칭')
     fsc: Mapped[Optional[str]] = mapped_column(TEXT, comment='군급부호')
     inc: Mapped[Optional[str]] = mapped_column(TEXT, comment='품명부호')
-    inc_name_kr: Mapped[Optional[str]] = mapped_column(TEXT, comment='품명_한글')
+    inc_name_ko: Mapped[Optional[str]] = mapped_column(TEXT, comment='품명_한글')
     regex: Mapped[Optional[str]] = mapped_column(TEXT, comment='정규표현식')
     detailed_designation: Mapped[Optional[str]] = mapped_column(TEXT, comment='호칭방법_본문')
 

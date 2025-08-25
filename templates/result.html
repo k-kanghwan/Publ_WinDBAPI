@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Country Code Result</title>
+  </head>
+  <body>
+    <h1>Result</h1>
+    {% for r in result %}
+    <div>
+      <h2>{{ r.country_code_2char}}</h2>
+      <p>3-char code: {{ r.country_code_3char}}</p>
+      <p>국가명(한글): {{ r.country_name_ko}}</p>
+      <p>국가명(영문): {{ r.country_name_en}}</p>
+    </div>
+    {% endfor %}
+  </body>
+</html>

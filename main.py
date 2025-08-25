@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session, declarative_base, Mapped, mapped_column
 from sqlalchemy import (
@@ -29,6 +29,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 app = FastAPI()
+app.add_middleware(SessionMiddleware, secret_key="your_secret_key")
 templates = Jinja2Templates(directory="templates")
 
 password = "local"
@@ -55,13 +56,17 @@ class EtcCountryCode(Base):
 
     country_code_2char: Mapped[str] = mapped_column(VARCHAR(2), primary_key=True, comment='국가부호_2자리')
     country_code_3char: Mapped[str] = mapped_column(VARCHAR(3), primary_key=True, comment='국가부호_3자리')
-    country_name_kr: Mapped[str] = mapped_column(VARCHAR(100), comment='국가명_한글')
+    country_name_ko: Mapped[str] = mapped_column(VARCHAR(100), comment='국가명_한글')
     country_name_en: Mapped[str] = mapped_column(VARCHAR(100), comment='국가명_영문')
     country_code_numeric: Mapped[Optional[int]] = mapped_column(Integer, comment='국가코드_숫자')
 
 class UserCreate(BaseModel):
     email: str
     full_name: str
+    password: str
+
+class UserLogin(BaseModel):
+    email: str
     password: str
 
 class CountryCodeCreate(BaseModel):
@@ -134,6 +139,22 @@ def read_country_codes(search_country_name: str, db: Session = Depends(get_db)):
     return country_codes
 
 
+@app.get("/country-codes/{first_char}")
+def search_country_code(
+    request: Request, first_char: str, db: Session = Depends(get_db)
+):
+    country_codes = (
+        db.query(EtcCountryCode)
+        .filter(EtcCountryCode.country_code_2char.ilike(f"%{first_char}%"))
+        .all()
+    )
+    if not country_codes:
+        raise HTTPException(status_code=404, detail="Country code not found")
+    return templates.TemplateResponse(
+        "result.html", {"request": request, "result": country_codes}
+    )
+
+
 @app.post("/country-codes/")
 def create_country_code(country_code: CountryCodeCreate, db: Session = Depends(get_db)):
     db_country_code = EtcCountryCode(**country_code.model_dump())
@@ -194,3 +215,11 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     return new_user
+
+
+@app.post("/login")
+async def login(user: UserLogin, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.email == user.email).first()
+    if not db_user or not verify_password(user.password, db_user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    return db_user
