@@ -218,8 +218,24 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @app.post("/login")
-async def login(user: UserLogin, db: Session = Depends(get_db)):
+async def login(request: Request, user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if not db_user or not verify_password(user.password, db_user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid email or password")
-    return db_user
+    else:
+        request.session["user_id"] = db_user.id
+        return {"message": "Login successful"}
+
+
+@app.post("/logout")
+async def logout(request: Request):
+    request.session.pop("user_id", None)
+    return {"message": "Logout successful"}
+
+
+@app.get("/get_curr_user")
+async def get_curr_user(request: Request):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return {"user_id": user_id}
