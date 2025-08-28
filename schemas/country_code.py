@@ -1,19 +1,19 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
 class CountryCodeCreate(BaseModel):
-    country_code_2char: str
-    country_code_3char: str
-    country_name_kr: str
-    country_name_en: str
-    country_code_numeric: Optional[int] = None
+    country_code_2char: str = Field(..., example="KR", max_length=2)
+    country_code_3char: str = Field(..., example="KOR", max_length=3)
+    country_name_ko: str = Field(..., example="대한민국", max_length=100)
+    country_name_en: str = Field(..., example="South Korea", max_length=100)
+    country_code_numeric: Optional[int] = Field(..., example=410)
 
 
 class CountryCodeUpdate(BaseModel):
     country_code_2char: Optional[str] = None
     country_code_3char: Optional[str] = None
-    country_name_kr: Optional[str] = None
+    country_name_ko: Optional[str] = None
     country_name_en: Optional[str] = None
     country_code_numeric: Optional[int] = None
 
@@ -33,6 +33,6 @@ class CountryCodeUpdate(BaseModel):
 class CountryCodeRead(BaseModel):
     country_code_2char: str
     country_code_3char: str
-    country_name_kr: str
+    country_name_ko: str
     country_name_en: str
     country_code_numeric: Optional[int] = None

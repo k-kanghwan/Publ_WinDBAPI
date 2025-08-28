@@ -1,5 +1,5 @@
 from typing import List, Optional
-from database.database import Base, engine, SessionLocal
+from database.database import Base
 
 
 from sqlalchemy import Integer, Text
